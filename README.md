@@ -69,3 +69,6 @@ In preparation for next week, complete the following in lab:
 - Firebase Realtime Database
 - Bootstrap 5
 - Webpack 5
+
+// 20221031190252
+// https://raw.githubusercontent.com/codetracker-learning/IN-CLASS-Almost-Amazon-old/main/sample_data/books.json
