@@ -1,4 +1,5 @@
 import { signOut } from '../utils/auth';
+import { showBooks } from '../pages/books';
 
 // navigation events
 const navigationEvents = () => {
