@@ -1,4 +1,4 @@
-import { createBook, updateBook, getBooks } from '../api/bookData';
+import { updateBook, getBooks } from '../api/bookData';
 import { showBooks } from '../pages/books';
 
 const formEvents = () => {
@@ -10,8 +10,10 @@ const formEvents = () => {
     }
 
     // TODO: CLICK EVENT FOR EDITING A BOOK
-    if (e.target.id.includes('submit-book')) {
-      // console.warn('CLICKED SUBMIT BOOK', e.target.id);
+    if (e.target.id.includes('update-book')) {
+      const [, firebaseKey] = e.target.id.split('--');
+      // console.warn('CLICKED UPDATE BOOK', e.target.id);
+      // console.warn(firebaseKey);
       const payload = {
         title: document.querySelector('#title').value,
         description: document.querySelector('#description').value,
@@ -19,14 +21,10 @@ const formEvents = () => {
         price: document.querySelector('#price').value,
         author_id: document.querySelector('#author_id').value,
         sale: document.querySelector('#sale').checked,
+        firebaseKey,
       };
-      // console.warn(payload);
-      createBook(payload).then(({ name }) => {
-        const patchPayload = { firebaseKey: name };
-
-        updateBook(patchPayload).then(() => {
-          getBooks().then(showBooks);
-        });
+      updateBook(payload).then(() => {
+        getBooks().then(showBooks);
       });
     }
 
