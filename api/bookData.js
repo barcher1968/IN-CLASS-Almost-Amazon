@@ -8,11 +8,17 @@ const getBooks = () => new Promise((resolve, reject) => {
   fetch(`${endpoint}/books.json`, {
     method: 'GET',
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   })
     .then((response) => response.json())
-    .then((data) => resolve(Object.values(data)))
+    .then((data) => {
+      if (data) {
+        resolve(Object.values(data));
+      } else {
+        resolve([]);
+      }
+    })
     .catch(reject);
 });
 
@@ -38,7 +44,7 @@ const getSingleBook = (firebaseKey) => new Promise((resolve, reject) => {
     }
   })
     .then((response) => response.json())
-    .then((data) => resolve(Object.values(data)))
+    .then((data) => resolve(data))
     .catch(reject);
 });
 
