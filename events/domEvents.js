@@ -1,6 +1,11 @@
 import { getSingleBook, deleteBook, getBooks } from '../api/bookData';
 import { showBooks } from '../pages/books';
 import addBookForm from '../components/forms/addBookForm';
+import addAuthorForm from '../components/forms/addAuthorForm';
+import { deleteSingleAuthor, getAuthors, getSingleAuthor } from '../api/authorData';
+import { showAuthors } from '../pages/authors';
+import { getBookDetails, deleteAuthorBooksRelationship } from '../api/mergedData';
+import viewBook from '../pages/viewBook';
 
 const domEvents = () => {
   document.querySelector('#main-container').addEventListener('click', (e) => {
@@ -27,11 +32,13 @@ const domEvents = () => {
     if (e.target.id.includes('edit-book-btn')) {
       const [, firebaseKey] = e.target.id.split('--');
       getSingleBook(firebaseKey).then((bookObj) => addBookForm(bookObj));
-      // getSingleBook(firebaseKey).then(addBookForm); // using the callback method
+      getSingleBook(firebaseKey).then(addBookForm); // using the callback method
     }
     // TODO: CLICK EVENT FOR VIEW BOOK DETAILS
     if (e.target.id.includes('view-book-btn')) {
       console.warn('VIEW BOOK', e.target.id);
+      const [, firebaseKey] = e.target.id.split('--');
+      getBookDetails(firebaseKey).then(viewBook);
       console.warn(e.target.id.split('--'));
     }
 
@@ -40,15 +47,30 @@ const domEvents = () => {
       // eslint-disable-next-line no-alert
       if (window.confirm('Want to delete?')) {
         console.warn('DELETE AUTHOR', e.target.id);
-        console.warn(e.target.id.split('--'));
+        const [, firebaseKey] = e.target.id.split('--');
+
+        deleteAuthorBooksRelationship(firebaseKey).then(() => {
+          getAuthors().then(showAuthors);
+        });
+
+        deleteSingleAuthor(firebaseKey).then(() => {
+          getAuthors().then(showAuthors);
+        });
       }
     }
 
     // FIXME: ADD CLICK EVENT FOR SHOWING FORM FOR ADDING AN AUTHOR
     if (e.target.id.includes('add-author-btn')) {
       console.warn('ADD AUTHOR');
+      addAuthorForm();
     }
     // FIXME: ADD CLICK EVENT FOR EDITING AN AUTHOR
+    if (e.target.id.includes('update-author')) {
+      // console.warn('UPDATE AUTHOR');
+      const [, firebaseKey] = e.target.id.split('--');
+      getSingleAuthor(firebaseKey).then((authorObj) => addAuthorForm(authorObj));
+      addAuthorForm();
+    }
   });
 };
 
